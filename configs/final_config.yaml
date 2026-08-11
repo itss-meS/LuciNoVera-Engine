@@ -1,0 +1,45 @@
+# Final Model Configuration
+
+## Architecture
+config: medium        # 8.9M params — see src/model/restoration_net.py::CONFIGS
+scale: 2               # 128x128 -> 256x256
+
+## Training command used to produce weights/restoration_model_final.pt
+python train.py --train_gt_dir dataset/train/ground_truth --train_degraded_dir dataset/train/degraded --val_split 0.1 --epochs 75 --batch_size 4 --lr 2e-4 --config medium --output_dir checkpoints --device cuda --amp
+
+## Fine-tuning step (loss reweighting toward sharper output)
+python train.py \
+    --train_gt_dir dataset/train/ground_truth \
+    --train_degraded_dir dataset/train/degraded \
+    --val_split 0.1 \
+    --epochs 25 \
+    --batch_size 4 \
+    --lr 6e-5 \
+    --config medium \
+    --output_dir checkpoints_perceptual \
+    --device cuda \
+    --amp \
+    --init_weights weights/restoration_model_final.pt \
+    --w_charbonnier 0.4 \
+    --w_ssim 0.1 \
+    --w_edge 0.3 \
+    --w_fft 0.2 \
+    --w_laplacian 0.2 \
+    --w_perceptual 0.4
+
+## Loss weights (defaults if not overridden)
+w_charbonnier: 1.0
+w_ssim: 0.2
+w_edge: 0.1
+w_fft: 0.05
+w_uncertainty: 0.05
+w_laplacian: 0.0
+w_perceptual: 0.0
+w_brightness: 0.0
+w_texture: 0.0
+
+## Final measured results (held-out validation split, evaluate.py)
+PSNR: 25.02 dB
+SSIM: 0.7122
+LPIPS: 0.2610
+Inference time: ~29 ms/image (RTX 3050 laptop GPU)
