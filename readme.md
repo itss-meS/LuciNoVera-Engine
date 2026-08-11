@@ -185,11 +185,7 @@ python verify_pairs.py --gt_dir dataset/train/ground_truth --degraded_dir datase
 ## Running Inference — the benchmarking script
 
 ```bash
-python inference.py \
-    --input_dir  /path/to/test/degraded_npy_folder \
-    --output_dir /path/to/save/restored_npy_folder \
-    --weights    weights/restoration_model_final.pt \
-    --device     cuda
+ python inference.py --input_dir dataset/test/degraded --output_dir results/test_restored --weights weights/restoration_model_final.pt --device cuda                                  
 ```
 
 <details>
@@ -218,11 +214,7 @@ scores against). To get real PSNR/SSIM/LPIPS, use the held-out validation
 split instead:
 
 ```bash
-python evaluate.py \
-    --train_gt_dir       dataset/train/ground_truth \
-    --train_degraded_dir dataset/train/degraded \
-    --weights            weights/restoration_model_final.pt \
-    --device              cuda
+python evaluate.py --train_gt_dir dataset/train/ground_truth --train_degraded_dir dataset/train/degraded --weights weights/restoration_model_final.pt --device cuda                  
 ```
 
 Also prints a brightness-bias and sharpness (Laplacian-variance) diagnostic
@@ -233,17 +225,7 @@ comparing the model's raw output against real ground truth.
 ## Reproducing Training
 
 ```bash
-python train.py \
-    --train_gt_dir       dataset/train/ground_truth \
-    --train_degraded_dir dataset/train/degraded \
-    --val_split          0.1 \
-    --epochs             75 \
-    --batch_size          4 \
-    --lr                 2e-4 \
-    --config             medium \
-    --output_dir         checkpoints \
-    --device             cuda \
-    --amp
+python train.py --train_gt_dir dataset/train/ground_truth --train_degraded_dir dataset/train/degraded --val_split 0.1 --epochs 44 --batch_size 4 --lr 6e-5 --config medium --output_dir checkpoints_perceptual --device cuda --amp                                                                                                                                                                          
 ```
 
 See [`configs/final_config.yaml`](configs/final_config.yaml) for the exact
