@@ -143,8 +143,8 @@ repository/
 ## Environment Setup
 
 ```bash
-git clone <this-repo-url>
-cd <repo-folder>
+git clone https://github.com/itss-meS/LuciNoVera-Engine.git
+cd LuciNoVera-Engine
 
 python -m venv venv
 venv\Scripts\activate            # Linux/Mac: source venv/bin/activate
